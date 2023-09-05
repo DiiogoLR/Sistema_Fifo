@@ -1,0 +1,90 @@
+using System;
+using System.Threading; //Uso do Threading para usar o sleep e conseguir um delay
+
+internal class Program
+{
+    static clientes[] itens = new clientes[5]; //Array de clientes
+    private static int numCliente = 0; //Variável para percorrer a array
+
+    public struct clientes
+    {
+        public string cpf;
+        public string nome;
+        public string senha;
+    }
+
+    static void CadastrarCliente() //Cadastro de clientes
+    {
+
+        Console.Write($"Informe o Nome do {numCliente + 1}º Cliente: ");
+        itens[numCliente].nome = Console.ReadLine();
+
+        Console.Write($"Informe o cpf do {numCliente + 1}º Cliente: ");
+        itens[numCliente].cpf = Console.ReadLine();
+
+
+        itens[numCliente].senha = numCliente.ToString().PadLeft(4, '0'); //Adicionar zeros a fim de completar um número pré definido de no máximo 4
+        Console.Clear();
+        numCliente++;
+    }
+
+    static void ChamarClient() //Listar clientes adicionados na array
+    {
+        foreach (var item in itens)
+        {
+            if (!string.IsNullOrWhiteSpace(item.nome) && !string.IsNullOrWhiteSpace(item.cpf)) //Verifica quais estão vazias e escreve apenas as com informações graças ao uso do "!"
+            {
+            Console.WriteLine($"Nome: {item.nome}");
+            Thread.Sleep(500);
+            Console.WriteLine($"cpf: {item.cpf.Substring(0, 3)}.{item.cpf.Substring(3, 3)}.{item.cpf.Substring(6, 3)}-{item.cpf.Substring(9, 2)}");
+            Thread.Sleep(500);
+            Console.WriteLine($"senha: {item.senha}\n");
+            Thread.Sleep(700);
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        bool MenuCommand = true;
+        while (MenuCommand)
+        {
+        menu:
+            Console.WriteLine("Selecione a opção:\n 1 - Cadastrar Cliente\n 2 - chamar cliente\n 3 - Sair");
+            switch (Console.ReadLine())
+            {
+                case "1":
+                    for (int i = 0; i < itens.Length; i++)
+                    {
+                    inicio:
+                        Console.Clear();
+                        CadastrarCliente();
+
+
+                        Console.WriteLine("Deseja cadastrar outro item? (S/N) ");
+                        string a = Console.ReadLine();
+
+                        
+                        if (a == "s" || a == "S")
+                        {
+                            goto inicio;
+                        }
+                        else
+                        {
+                            goto menu;
+                        }
+                    }
+                    break;
+                case "2":
+                    ChamarClient();
+                    break;
+                case "3":
+                    MenuCommand = false;
+                    break;
+                default:
+                    Console.WriteLine("Opção inválida!");
+                    break;
+            }
+        }
+    }
+}
